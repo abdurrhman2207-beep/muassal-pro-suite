@@ -89,7 +89,7 @@ function POSPage() {
 
   const checkout = async () => {
     if (cart.length === 0) { toast.error("السلة فارغة"); return; }
-    const { data, error } = await supabase.rpc("create_sale", {
+    const { data, error } = await (supabase.rpc as any)("create_sale", {
       _customer_id: customer || null,
       _discount: discount,
       _tax: tax,
