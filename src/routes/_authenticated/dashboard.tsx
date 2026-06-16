@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/_authenticated/")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "الرئيسية — Muassal Pro" }] }),
   component: Dashboard,
 });
