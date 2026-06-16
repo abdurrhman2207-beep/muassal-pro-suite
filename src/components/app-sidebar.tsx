@@ -12,21 +12,22 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
-const mainItems = [
+type NavItem = { title: string; url: string; icon: any; role: "any" | "admin" };
+const mainItems: NavItem[] = [
   { title: "الرئيسية", url: "/dashboard", icon: LayoutDashboard, role: "any" as const },
   { title: "نقطة البيع", url: "/pos", icon: ShoppingCart, role: "any" as const },
   { title: "المبيعات", url: "/sales", icon: Receipt, role: "any" as const },
 ];
-const inventoryItems = [
+const inventoryItems: NavItem[] = [
   { title: "المنتجات", url: "/products", icon: Package, role: "any" as const },
   { title: "الأصناف", url: "/categories", icon: Tags, role: "any" as const },
   { title: "المشتريات", url: "/purchases", icon: FileText, role: "admin" as const },
 ];
-const peopleItems = [
+const peopleItems: NavItem[] = [
   { title: "الموردين", url: "/suppliers", icon: Truck, role: "any" as const },
   { title: "العملاء", url: "/customers", icon: Users, role: "any" as const },
 ];
-const adminItems = [
+const adminItems: NavItem[] = [
   { title: "التقارير", url: "/reports", icon: BarChart3, role: "admin" as const },
   { title: "المستخدمين", url: "/users", icon: UserCog, role: "admin" as const },
   { title: "الإعدادات", url: "/settings", icon: Settings, role: "admin" as const },
@@ -55,7 +56,7 @@ export function AppSidebar() {
     navigate({ to: "/auth", replace: true });
   };
 
-  const renderGroup = (label: string, items: typeof mainItems) => {
+  const renderGroup = (label: string, items: NavItem[]) => {
     const visible = items.filter((i) => i.role === "any" || isAdmin);
     if (visible.length === 0) return null;
     return (
@@ -66,7 +67,7 @@ export function AppSidebar() {
             {visible.map((item) => (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton asChild isActive={path === item.url}>
-                  <Link to={item.url} className="flex items-center gap-2">
+                  <Link to={item.url as any} className="flex items-center gap-2">
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
                   </Link>
