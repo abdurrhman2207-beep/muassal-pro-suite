@@ -34,30 +34,6 @@ function POSPage() {
 
   useEffect(() => { barcodeRef.current?.focus(); }, []);
 
-  // USB/Bluetooth keyboard-wedge scanner: capture rapid keystrokes ending with Enter
-  useEffect(() => {
-    let buf = "";
-    let last = 0;
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
-      const now = Date.now();
-      if (now - last > 80) buf = "";
-      last = now;
-      if (e.key === "Enter") {
-        if (buf.length >= 3) {
-          handleScanned(buf);
-          buf = "";
-        }
-        return;
-      }
-      if (e.key.length === 1) buf += e.key;
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products]);
-
   const { data: products } = useQuery({
     queryKey: ["pos-products"],
     queryFn: async () => (await supabase.from("products").select("id, name, barcode, sale_price, quantity").order("name")).data ?? [],
@@ -102,6 +78,36 @@ function POSPage() {
     if (found) { addToCart(found); toast.success(`تمت إضافة: ${found.name}`); }
     else toast.error("لم يتم العثور على المنتج", { description: code });
   };
+
+  // USB/Bluetooth keyboard-wedge scanner: capture rapid keystrokes ending with Enter
+  const productsRef = useRef(products);
+  productsRef.current = products;
+  useEffect(() => {
+    let buf = "";
+    let last = 0;
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      const now = Date.now();
+      if (now - last > 80) buf = "";
+      last = now;
+      if (e.key === "Enter") {
+        if (buf.length >= 3) {
+          const code = buf;
+          buf = "";
+          const list = productsRef.current ?? [];
+          const found = list.find((p: any) => p.barcode === code.trim());
+          if (found) { addToCart(found); toast.success(`تمت إضافة: ${found.name}`); }
+          else toast.error("لم يتم العثور على المنتج", { description: code });
+        }
+        return;
+      }
+      if (e.key.length === 1) buf += e.key;
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateQty = (id: string, delta: number) => {
     setCart((p) => p.map((c) => {
