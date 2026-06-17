@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, ShoppingCart, Package, Tags, Truck, Users, FileText,
-  Receipt, BarChart3, Settings, UserCog, LogOut, Flame, Moon, Sun,
+  Receipt, BarChart3, Settings, UserCog, LogOut, Flame, Moon, Sun, Boxes, Activity,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -21,6 +21,7 @@ const mainItems: NavItem[] = [
 const inventoryItems: NavItem[] = [
   { title: "المنتجات", url: "/products", icon: Package, role: "any" as const },
   { title: "الأصناف", url: "/categories", icon: Tags, role: "any" as const },
+  { title: "تحويلات المخزون", url: "/inventory", icon: Boxes, role: "admin" as const },
   { title: "المشتريات", url: "/purchases", icon: FileText, role: "admin" as const },
 ];
 const peopleItems: NavItem[] = [
@@ -28,6 +29,7 @@ const peopleItems: NavItem[] = [
   { title: "العملاء", url: "/customers", icon: Users, role: "any" as const },
 ];
 const adminItems: NavItem[] = [
+  { title: "التحليلات", url: "/analytics", icon: Activity, role: "admin" as const },
   { title: "التقارير", url: "/reports", icon: BarChart3, role: "admin" as const },
   { title: "المستخدمين", url: "/users", icon: UserCog, role: "admin" as const },
   { title: "الإعدادات", url: "/settings", icon: Settings, role: "admin" as const },

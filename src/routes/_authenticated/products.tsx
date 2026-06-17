@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatNumber } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Barcode } from "lucide-react";
+import { printBarcodeLabel } from "@/lib/print-barcode";
 
 export const Route = createFileRoute("/_authenticated/products")({
   head: () => ({ meta: [{ title: "المنتجات — Muassal Pro" }] }),
@@ -37,6 +40,11 @@ function ProductsPage() {
           const low = Number(r.quantity) <= Number(r.low_stock_threshold);
           return <Badge variant={low ? "destructive" : "secondary"}>{formatNumber(r.quantity)}</Badge>;
         } },
+        { key: "actions", label: "إجراءات", render: (r: any) => r.barcode ? (
+          <Button size="sm" variant="outline" onClick={() => printBarcodeLabel({ code: r.barcode, name: r.name, price: formatCurrency(r.sale_price) })}>
+            <Barcode className="h-3.5 w-3.5 ml-1" /> طباعة
+          </Button>
+        ) : <span className="text-xs text-muted-foreground">—</span> },
       ]}
       searchKeys={["name", "barcode"]}
       emptyState={{ name: "", barcode: "", category_id: null, purchase_price: 0, sale_price: 0, quantity: 0, low_stock_threshold: 5 }}
