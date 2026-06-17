@@ -332,6 +332,47 @@ export type Database = {
           },
         ]
       }
+      stock_adjustments: {
+        Row: {
+          adjustment_type: Database["public"]["Enums"]["adjustment_type"]
+          created_at: string
+          created_by: string | null
+          id: string
+          product_id: string
+          quantity: number
+          reason: string | null
+          reference: string | null
+        }
+        Insert: {
+          adjustment_type?: Database["public"]["Enums"]["adjustment_type"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          product_id: string
+          quantity: number
+          reason?: string | null
+          reference?: string | null
+        }
+        Update: {
+          adjustment_type?: Database["public"]["Enums"]["adjustment_type"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          product_id?: string
+          quantity?: number
+          reason?: string | null
+          reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_adjustments_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_settings: {
         Row: {
           address: string | null
@@ -457,6 +498,13 @@ export type Database = {
       is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
+      adjustment_type:
+        | "manual"
+        | "damage"
+        | "gift"
+        | "transfer_in"
+        | "transfer_out"
+        | "count"
       app_role: "admin" | "cashier"
       payment_method: "cash" | "card" | "transfer"
     }
@@ -586,6 +634,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      adjustment_type: [
+        "manual",
+        "damage",
+        "gift",
+        "transfer_in",
+        "transfer_out",
+        "count",
+      ],
       app_role: ["admin", "cashier"],
       payment_method: ["cash", "card", "transfer"],
     },
