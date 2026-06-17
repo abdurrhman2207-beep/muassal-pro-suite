@@ -12,6 +12,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Minus, Trash2, Printer, ShoppingCart } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
 import { toast } from "sonner";
+import { BarcodeScanner } from "@/components/barcode-scanner";
+import { Camera } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/pos")({
   head: () => ({ meta: [{ title: "نقطة البيع — Muassal Pro" }] }),
@@ -28,6 +30,7 @@ function POSPage() {
   const [customer, setCustomer] = useState<string>("");
   const [payment, setPayment] = useState<"cash" | "card" | "transfer">("cash");
   const [lastSaleId, setLastSaleId] = useState<string | null>(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   useEffect(() => { barcodeRef.current?.focus(); }, []);
 
@@ -69,6 +72,42 @@ function POSPage() {
     const found = (products ?? []).find((p: any) => p.barcode === v.trim());
     if (found) { addToCart(found); setSearch(""); }
   };
+
+  const handleScanned = (code: string) => {
+    const found = (products ?? []).find((p: any) => p.barcode === code.trim());
+    if (found) { addToCart(found); toast.success(`تمت إضافة: ${found.name}`); }
+    else toast.error("لم يتم العثور على المنتج", { description: code });
+  };
+
+  // USB/Bluetooth keyboard-wedge scanner: capture rapid keystrokes ending with Enter
+  const productsRef = useRef(products);
+  productsRef.current = products;
+  useEffect(() => {
+    let buf = "";
+    let last = 0;
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      const now = Date.now();
+      if (now - last > 80) buf = "";
+      last = now;
+      if (e.key === "Enter") {
+        if (buf.length >= 3) {
+          const code = buf;
+          buf = "";
+          const list = productsRef.current ?? [];
+          const found = list.find((p: any) => p.barcode === code.trim());
+          if (found) { addToCart(found); toast.success(`تمت إضافة: ${found.name}`); }
+          else toast.error("لم يتم العثور على المنتج", { description: code });
+        }
+        return;
+      }
+      if (e.key.length === 1) buf += e.key;
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const updateQty = (id: string, delta: number) => {
     setCart((p) => p.map((c) => {
@@ -112,13 +151,18 @@ function POSPage() {
     <div className="grid lg:grid-cols-[1fr_400px] gap-4 h-[calc(100vh-7rem)]">
       <Card className="flex flex-col overflow-hidden">
         <div className="p-3 border-b">
-          <Input
-            ref={barcodeRef}
-            placeholder="ابحث بالاسم أو امسح الباركود..."
-            value={search}
-            onChange={(e) => handleBarcode(e.target.value)}
-            className="text-lg h-12"
-          />
+          <div className="flex gap-2">
+            <Input
+              ref={barcodeRef}
+              placeholder="ابحث بالاسم أو امسح الباركود..."
+              value={search}
+              onChange={(e) => handleBarcode(e.target.value)}
+              className="text-lg h-12 flex-1"
+            />
+            <Button variant="outline" className="h-12" onClick={() => setScannerOpen(true)}>
+              <Camera className="h-5 w-5 ml-1" /> مسح
+            </Button>
+          </div>
         </div>
         <ScrollArea className="flex-1">
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
@@ -201,6 +245,7 @@ function POSPage() {
           </div>
         </div>
       </Card>
+      <BarcodeScanner open={scannerOpen} onOpenChange={setScannerOpen} onResult={handleScanned} />
     </div>
   );
 }
