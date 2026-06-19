@@ -4,7 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const getBusinessHealth = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.rpc("calculate_business_health" as any);
+    const { data, error } = await (context.supabase as any).rpc("calculate_business_health");
     if (error) throw new Error(error.message);
     return data as { score: number; breakdown: Record<string, number>; metrics: Record<string, number> };
   });
@@ -12,7 +12,7 @@ export const getBusinessHealth = createServerFn({ method: "GET" })
 export const recordHealthSnapshot = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase.rpc("record_health_snapshot" as any);
+    const { data, error } = await (context.supabase as any).rpc("record_health_snapshot");
     if (error) throw new Error(error.message);
     return { id: data };
   });
@@ -23,7 +23,7 @@ export const generateDailyStrategy = createServerFn({ method: "POST" })
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
-    const { data: health } = await context.supabase.rpc("calculate_business_health" as any);
+    const { data: health } = await (context.supabase as any).rpc("calculate_business_health");
     const { generateText } = await import("ai");
     const { createLovableAiGateway } = await import("./ai-gateway.server");
     const gateway = createLovableAiGateway(key);
