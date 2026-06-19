@@ -2,6 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, ShoppingCart, Package, Tags, Truck, Users, FileText,
   Receipt, BarChart3, Settings, UserCog, LogOut, Flame, Moon, Sun, Boxes, Activity,
+  Brain, FileCheck, ListTodo, MessageSquare, Zap,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -33,6 +34,14 @@ const adminItems: NavItem[] = [
   { title: "التقارير", url: "/reports", icon: BarChart3, role: "admin" as const },
   { title: "المستخدمين", url: "/users", icon: UserCog, role: "admin" as const },
   { title: "الإعدادات", url: "/settings", icon: Settings, role: "admin" as const },
+];
+const bosItems: NavItem[] = [
+  { title: "مركز القيادة", url: "/command-center", icon: Brain, role: "admin" as const },
+  { title: "المستشار التنفيذي", url: "/ai-advisor", icon: Brain, role: "admin" as const },
+  { title: "الموافقات", url: "/approvals", icon: FileCheck, role: "any" as const },
+  { title: "المهام", url: "/tasks", icon: ListTodo, role: "any" as const },
+  { title: "دردشة الفريق", url: "/team-chat", icon: MessageSquare, role: "any" as const },
+  { title: "الأتمتة", url: "/automations", icon: Zap, role: "admin" as const },
 ];
 
 export function AppSidebar() {
@@ -97,6 +106,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         {renderGroup("الرئيسية", mainItems)}
+        {renderGroup("نظام الأعمال الذكي", bosItems)}
         {renderGroup("المخزون", inventoryItems)}
         {renderGroup("جهات الاتصال", peopleItems)}
         {renderGroup("الإدارة", adminItems)}
