@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiAiAdvisorRouteImport } from './routes/api/ai-advisor'
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
+import { Route as AuthenticatedTeamChatRouteImport } from './routes/_authenticated/team-chat'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -53,6 +54,11 @@ const ApiAiAdvisorRoute = ApiAiAdvisorRouteImport.update({
 const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTeamChatRoute = AuthenticatedTeamChatRouteImport.update({
+  id: '/team-chat',
+  path: '/team-chat',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/team-chat': typeof AuthenticatedTeamChatRoute
   '/users': typeof AuthenticatedUsersRoute
   '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/team-chat': typeof AuthenticatedTeamChatRoute
   '/users': typeof AuthenticatedUsersRoute
   '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/_authenticated/team-chat': typeof AuthenticatedTeamChatRoute
   '/_authenticated/users': typeof AuthenticatedUsersRoute
   '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/suppliers'
     | '/tasks'
+    | '/team-chat'
     | '/users'
     | '/api/ai-advisor'
   fileRoutesByTo: FileRoutesByTo
@@ -248,6 +258,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/suppliers'
     | '/tasks'
+    | '/team-chat'
     | '/users'
     | '/api/ai-advisor'
   id:
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/suppliers'
     | '/_authenticated/tasks'
+    | '/_authenticated/team-chat'
     | '/_authenticated/users'
     | '/api/ai-advisor'
   fileRoutesById: FileRoutesById
@@ -317,6 +329,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof AuthenticatedUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/team-chat': {
+      id: '/_authenticated/team-chat'
+      path: '/team-chat'
+      fullPath: '/team-chat'
+      preLoaderRoute: typeof AuthenticatedTeamChatRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tasks': {
@@ -451,6 +470,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
+  AuthenticatedTeamChatRoute: typeof AuthenticatedTeamChatRoute
   AuthenticatedUsersRoute: typeof AuthenticatedUsersRoute
 }
 
@@ -471,6 +491,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
+  AuthenticatedTeamChatRoute: AuthenticatedTeamChatRoute,
   AuthenticatedUsersRoute: AuthenticatedUsersRoute,
 }
 
