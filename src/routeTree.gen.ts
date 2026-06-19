@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiAiAdvisorRouteImport } from './routes/api/ai-advisor'
 import { Route as AuthenticatedUsersRouteImport } from './routes/_authenticated/users'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -38,6 +39,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAiAdvisorRoute = ApiAiAdvisorRouteImport.update({
+  id: '/api/ai-advisor',
+  path: '/api/ai-advisor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedUsersRoute = AuthenticatedUsersRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/users': typeof AuthenticatedUsersRoute
+  '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/users': typeof AuthenticatedUsersRoute
+  '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
   '/_authenticated/users': typeof AuthenticatedUsersRoute
+  '/api/ai-advisor': typeof ApiAiAdvisorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/suppliers'
     | '/users'
+    | '/api/ai-advisor'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/suppliers'
     | '/users'
+    | '/api/ai-advisor'
   id:
     | '__root__'
     | '/'
@@ -212,12 +223,14 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/suppliers'
     | '/_authenticated/users'
+    | '/api/ai-advisor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiAiAdvisorRoute: typeof ApiAiAdvisorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ai-advisor': {
+      id: '/api/ai-advisor'
+      path: '/api/ai-advisor'
+      fullPath: '/api/ai-advisor'
+      preLoaderRoute: typeof ApiAiAdvisorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/users': {
@@ -376,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiAiAdvisorRoute: ApiAiAdvisorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
