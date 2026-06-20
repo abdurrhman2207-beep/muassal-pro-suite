@@ -309,6 +309,36 @@ export type Database = {
           },
         ]
       }
+      currencies: {
+        Row: {
+          code: string
+          created_at: string
+          exchange_rate: number
+          is_base: boolean
+          name: string
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          exchange_rate?: number
+          is_base?: boolean
+          name: string
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          exchange_rate?: number
+          is_base?: boolean
+          name?: string
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       custom_kpis: {
         Row: {
           created_at: string
@@ -369,29 +399,86 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          customer_id: string
+          id: string
+          method: string
+          notes: string | null
+          sale_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          customer_id: string
+          id?: string
+          method?: string
+          notes?: string | null
+          sale_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          customer_id?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          sale_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_payments_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
+          balance: number
           created_at: string
+          credit_limit: number
           email: string | null
           id: string
+          loyalty_points: number
           name: string
           notes: string | null
           phone: string | null
           updated_at: string
         }
         Insert: {
+          balance?: number
           created_at?: string
+          credit_limit?: number
           email?: string | null
           id?: string
+          loyalty_points?: number
           name: string
           notes?: string | null
           phone?: string | null
           updated_at?: string
         }
         Update: {
+          balance?: number
           created_at?: string
+          credit_limit?: number
           email?: string | null
           id?: string
+          loyalty_points?: number
           name?: string
           notes?: string | null
           phone?: string | null
@@ -716,11 +803,16 @@ export type Database = {
         Row: {
           cashier_id: string | null
           created_at: string
+          currency: string
           customer_id: string | null
           discount: number
+          due_amount: number
+          exchange_rate: number
           id: string
           invoice_number: string
+          paid_amount: number
           payment_method: Database["public"]["Enums"]["payment_method"]
+          status: Database["public"]["Enums"]["sale_status"]
           subtotal: number
           tax: number
           total: number
@@ -728,11 +820,16 @@ export type Database = {
         Insert: {
           cashier_id?: string | null
           created_at?: string
+          currency?: string
           customer_id?: string | null
           discount?: number
+          due_amount?: number
+          exchange_rate?: number
           id?: string
           invoice_number: string
+          paid_amount?: number
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          status?: Database["public"]["Enums"]["sale_status"]
           subtotal?: number
           tax?: number
           total?: number
@@ -740,11 +837,16 @@ export type Database = {
         Update: {
           cashier_id?: string | null
           created_at?: string
+          currency?: string
           customer_id?: string | null
           discount?: number
+          due_amount?: number
+          exchange_rate?: number
           id?: string
           invoice_number?: string
+          paid_amount?: number
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          status?: Database["public"]["Enums"]["sale_status"]
           subtotal?: number
           tax?: number
           total?: number
@@ -1081,16 +1183,30 @@ export type Database = {
         Args: { _items: Json; _notes: string; _supplier_id: string }
         Returns: string
       }
-      create_sale: {
-        Args: {
-          _customer_id: string
-          _discount: number
-          _items: Json
-          _payment: Database["public"]["Enums"]["payment_method"]
-          _tax: number
-        }
-        Returns: string
-      }
+      create_sale:
+        | {
+            Args: {
+              _customer_id: string
+              _discount: number
+              _items: Json
+              _payment: Database["public"]["Enums"]["payment_method"]
+              _tax: number
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _currency?: string
+              _customer_id: string
+              _discount: number
+              _exchange_rate?: number
+              _items: Json
+              _paid_amount?: number
+              _payment: Database["public"]["Enums"]["payment_method"]
+              _tax: number
+            }
+            Returns: string
+          }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1099,6 +1215,16 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      record_customer_payment: {
+        Args: {
+          _amount: number
+          _customer_id: string
+          _method?: string
+          _notes?: string
+          _sale_id: string
+        }
+        Returns: string
+      }
       record_health_snapshot: { Args: never; Returns: string }
     }
     Enums: {
@@ -1118,6 +1244,7 @@ export type Database = {
         | "price_change"
         | "refund"
       payment_method: "cash" | "card" | "transfer"
+      sale_status: "paid" | "partial" | "credit" | "void"
       task_priority: "low" | "medium" | "high" | "urgent"
       task_status: "todo" | "in_progress" | "done" | "cancelled"
     }
@@ -1265,6 +1392,7 @@ export const Constants = {
         "refund",
       ],
       payment_method: ["cash", "card", "transfer"],
+      sale_status: ["paid", "partial", "credit", "void"],
       task_priority: ["low", "medium", "high", "urgent"],
       task_status: ["todo", "in_progress", "done", "cancelled"],
     },
