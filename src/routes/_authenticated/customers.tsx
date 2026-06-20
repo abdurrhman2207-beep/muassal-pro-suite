@@ -15,9 +15,11 @@ export const Route = createFileRoute("/_authenticated/customers")({
         { key: "name", label: "الاسم" },
         { key: "phone", label: "الهاتف" },
         { key: "email", label: "البريد" },
+        { key: "credit_limit", label: "حد الائتمان" },
+        { key: "balance", label: "الرصيد المستحق" },
       ]}
       searchKeys={["name", "phone", "email"]}
-      emptyState={{ name: "", phone: "", email: "", notes: "" }}
+      emptyState={{ name: "", phone: "", email: "", notes: "", credit_limit: 0 }}
       renderForm={(s, set) => (
         <>
           <div className="space-y-1.5"><Label>الاسم</Label>
@@ -26,6 +28,8 @@ export const Route = createFileRoute("/_authenticated/customers")({
             <Input dir="ltr" value={s.phone ?? ""} onChange={(e) => set({ ...s, phone: e.target.value })} /></div>
           <div className="space-y-1.5"><Label>البريد</Label>
             <Input dir="ltr" value={s.email ?? ""} onChange={(e) => set({ ...s, email: e.target.value })} /></div>
+          <div className="space-y-1.5"><Label>حد الائتمان (الحد الأقصى للدين)</Label>
+            <Input type="number" step="0.01" value={s.credit_limit ?? 0} onChange={(e) => set({ ...s, credit_limit: Number(e.target.value) || 0 })} /></div>
           <div className="space-y-1.5"><Label>ملاحظات</Label>
             <Textarea value={s.notes ?? ""} onChange={(e) => set({ ...s, notes: e.target.value })} /></div>
         </>
