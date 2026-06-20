@@ -41,7 +41,8 @@ function SalesPage() {
         <Table>
           <TableHeader><TableRow>
             <TableHead>رقم الفاتورة</TableHead><TableHead>التاريخ</TableHead>
-            <TableHead>العميل</TableHead><TableHead>الدفع</TableHead>
+            <TableHead>العميل</TableHead><TableHead>الحالة</TableHead>
+            <TableHead>المدفوع / المتبقي</TableHead>
             <TableHead>الإجمالي</TableHead><TableHead>إجراء</TableHead>
           </TableRow></TableHeader>
           <TableBody>
@@ -49,10 +50,18 @@ function SalesPage() {
               : (data ?? []).map((s: any) => (
               <TableRow key={s.id}>
                 <TableCell className="font-mono" dir="ltr">{s.invoice_number}</TableCell>
-                <TableCell>{formatDate(s.created_at)}</TableCell>
+                <TableCell className="whitespace-nowrap">{formatDate(s.created_at)}</TableCell>
                 <TableCell>{s.customers?.name ?? "—"}</TableCell>
-                <TableCell><Badge variant="secondary">{s.payment_method}</Badge></TableCell>
-                <TableCell className="font-bold text-primary">{formatCurrency(s.total)}</TableCell>
+                <TableCell>
+                  <Badge variant={s.status === "paid" ? "default" : s.status === "partial" ? "secondary" : s.status === "credit" ? "destructive" : "outline"}>
+                    {s.status === "paid" ? "مدفوعة" : s.status === "partial" ? "جزئي" : s.status === "credit" ? "آجل" : s.status ?? "—"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-xs whitespace-nowrap">
+                  <span className="text-primary">{formatCurrency(s.paid_amount ?? s.total, s.currency)}</span>
+                  {Number(s.due_amount) > 0 && <span className="text-destructive"> / {formatCurrency(s.due_amount, s.currency)}</span>}
+                </TableCell>
+                <TableCell className="font-bold text-primary whitespace-nowrap">{formatCurrency(s.total, s.currency)}</TableCell>
                 <TableCell>
                   <Button size="icon" variant="ghost" onClick={() => setOpen(s)}><Eye className="h-4 w-4" /></Button>
                 </TableCell>
@@ -92,11 +101,15 @@ function SalesPage() {
                   ))}
                 </TableBody>
               </Table>
-              <div className="space-y-1 text-sm border-t pt-3">
-                <div className="flex justify-between"><span>المجموع</span><span>{formatCurrency(open.subtotal)}</span></div>
-                <div className="flex justify-between"><span>الخصم</span><span>{formatCurrency(open.discount)}</span></div>
-                <div className="flex justify-between"><span>الضريبة</span><span>{formatCurrency(open.tax)}</span></div>
-                <div className="flex justify-between font-bold text-base border-t pt-1"><span>الإجمالي</span><span className="text-primary">{formatCurrency(open.total)}</span></div>
+                <div className="space-y-1 text-sm border-t pt-3">
+                <div className="flex justify-between"><span>المجموع</span><span>{formatCurrency(open.subtotal, open.currency)}</span></div>
+                <div className="flex justify-between"><span>الخصم</span><span>{formatCurrency(open.discount, open.currency)}</span></div>
+                <div className="flex justify-between"><span>الضريبة</span><span>{formatCurrency(open.tax, open.currency)}</span></div>
+                <div className="flex justify-between font-bold text-base border-t pt-1"><span>الإجمالي</span><span className="text-primary">{formatCurrency(open.total, open.currency)}</span></div>
+                <div className="flex justify-between"><span>المدفوع</span><span>{formatCurrency(open.paid_amount ?? open.total, open.currency)}</span></div>
+                {Number(open.due_amount) > 0 && (
+                  <div className="flex justify-between font-bold text-destructive"><span>المتبقي (آجل)</span><span>{formatCurrency(open.due_amount, open.currency)}</span></div>
+                )}
               </div>
               <div className="flex justify-end no-print">
                 <Button onClick={() => window.print()}><Printer className="ml-2 h-4 w-4" />طباعة</Button>

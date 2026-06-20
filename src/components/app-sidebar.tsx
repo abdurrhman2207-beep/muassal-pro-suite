@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, ShoppingCart, Package, Tags, Truck, Users, FileText,
   Receipt, BarChart3, Settings, UserCog, LogOut, Flame, Moon, Sun, Boxes, Activity,
-  Brain, FileCheck, ListTodo, MessageSquare, Zap,
+  Brain, FileCheck, ListTodo, MessageSquare, Zap, Wallet,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -28,6 +28,7 @@ const inventoryItems: NavItem[] = [
 const peopleItems: NavItem[] = [
   { title: "الموردين", url: "/suppliers", icon: Truck, role: "any" as const },
   { title: "العملاء", url: "/customers", icon: Users, role: "any" as const },
+  { title: "حسابات العملاء", url: "/customer-accounts", icon: Wallet, role: "any" as const },
 ];
 const adminItems: NavItem[] = [
   { title: "التحليلات", url: "/analytics", icon: Activity, role: "admin" as const },
