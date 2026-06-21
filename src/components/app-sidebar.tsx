@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, ShoppingCart, Package, Tags, Truck, Users, FileText,
   Receipt, BarChart3, Settings, UserCog, LogOut, Flame, Moon, Sun, Boxes, Activity,
-  Brain, FileCheck, ListTodo, MessageSquare, Zap, Wallet,
+  Brain, FileCheck, ListTodo, MessageSquare, Zap, Wallet, Plane,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -39,6 +39,7 @@ const adminItems: NavItem[] = [
 const bosItems: NavItem[] = [
   { title: "مركز القيادة", url: "/command-center", icon: Brain, role: "admin" as const },
   { title: "المستشار التنفيذي", url: "/ai-advisor", icon: Brain, role: "admin" as const },
+  { title: "وضع المالك الغائب", url: "/absent-owner", icon: Plane, role: "admin" as const },
   { title: "الموافقات", url: "/approvals", icon: FileCheck, role: "any" as const },
   { title: "المهام", url: "/tasks", icon: ListTodo, role: "any" as const },
   { title: "دردشة الفريق", url: "/team-chat", icon: MessageSquare, role: "any" as const },

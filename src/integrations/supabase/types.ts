@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_restrictions: {
+        Row: {
+          disabled: boolean
+          reason: string | null
+          restricted_at: string
+          restricted_by: string | null
+          user_id: string
+        }
+        Insert: {
+          disabled?: boolean
+          reason?: string | null
+          restricted_at?: string
+          restricted_by?: string | null
+          user_id: string
+        }
+        Update: {
+          disabled?: boolean
+          reason?: string | null
+          restricted_at?: string
+          restricted_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      activity_events: {
+        Row: {
+          amount: number | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          flagged: boolean
+          id: string
+          metadata: Json
+          reason: string | null
+          risk_level: string
+          risk_score: number
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          flagged?: boolean
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          risk_level?: string
+          risk_score?: number
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          flagged?: boolean
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          risk_level?: string
+          risk_score?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_recommendations: {
         Row: {
           body: string
@@ -582,6 +651,45 @@ export type Database = {
         }
         Relationships: []
       }
+      owner_mode: {
+        Row: {
+          enabled: boolean
+          enabled_at: string | null
+          freeze_discounts: boolean
+          freeze_inventory: boolean
+          freeze_returns: boolean
+          id: boolean
+          notes: string | null
+          require_approval_discount_pct: number
+          require_approval_refund_amount: number
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          enabled_at?: string | null
+          freeze_discounts?: boolean
+          freeze_inventory?: boolean
+          freeze_returns?: boolean
+          id?: boolean
+          notes?: string | null
+          require_approval_discount_pct?: number
+          require_approval_refund_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          enabled_at?: string | null
+          freeze_discounts?: boolean
+          freeze_inventory?: boolean
+          freeze_returns?: boolean
+          id?: boolean
+          notes?: string | null
+          require_approval_discount_pct?: number
+          require_approval_refund_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           barcode: string | null
@@ -857,6 +965,59 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          created_at: string
+          id: string
+          kind: string
+          message: string
+          metadata: Json
+          related_event_id: string | null
+          severity: string
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          message: string
+          metadata?: Json
+          related_event_id?: string | null
+          severity?: string
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          message?: string
+          metadata?: Json
+          related_event_id?: string | null
+          severity?: string
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_alerts_related_event_id_fkey"
+            columns: ["related_event_id"]
+            isOneToOne: false
+            referencedRelation: "activity_events"
             referencedColumns: ["id"]
           },
         ]
@@ -1207,6 +1368,17 @@ export type Database = {
             }
             Returns: string
           }
+      employee_trust_scores: {
+        Args: never
+        Returns: {
+          avg_risk: number
+          events: number
+          flagged: number
+          full_name: string
+          trust_score: number
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1215,6 +1387,16 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_activity: {
+        Args: {
+          _amount: number
+          _entity_id: string
+          _entity_type: string
+          _metadata?: Json
+          _type: string
+        }
+        Returns: string
+      }
       record_customer_payment: {
         Args: {
           _amount: number
@@ -1226,6 +1408,7 @@ export type Database = {
         Returns: string
       }
       record_health_snapshot: { Args: never; Returns: string }
+      store_risk_score: { Args: never; Returns: Json }
     }
     Enums: {
       adjustment_type:
