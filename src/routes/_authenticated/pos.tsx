@@ -14,6 +14,7 @@ import { Plus, Minus, Trash2, Printer, ShoppingCart, Wallet, Search, Camera, Pac
 import { formatCurrency } from "@/lib/format";
 import { toast } from "sonner";
 import { BarcodeScanner } from "@/components/barcode-scanner";
+import { InvoicePrint, type InvoiceData } from "@/components/invoice-print";
 
 export const Route = createFileRoute("/_authenticated/pos")({
   head: () => ({ meta: [{ title: "نقطة البيع — Muassal Pro" }] }),
@@ -30,6 +31,7 @@ function POSPage() {
   const [customer, setCustomer] = useState<string>("");
   const [payment, setPayment] = useState<"cash" | "card" | "transfer">("cash");
   const [lastSaleId, setLastSaleId] = useState<string | null>(null);
+  const [lastInvoice, setLastInvoice] = useState<InvoiceData | null>(null);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [paidAmount, setPaidAmount] = useState<number | "">("");
   const [currency, setCurrency] = useState<string>("YER");
@@ -162,13 +164,21 @@ function POSPage() {
     if (error) { toast.error("فشل إتمام البيع", { description: error.message }); return; }
     toast.success(due > 0 ? `تم البيع — متبقي ${formatCurrency(due, currency)}` : "تم إتمام البيع بنجاح");
     setLastSaleId(data as string);
+    setLastInvoice({
+      number: typeof data === "string" ? (data as string).slice(0, 8) : data,
+      date: new Date().toLocaleString("ar"),
+      store: settings ? { name: (settings as any).store_name, phone: (settings as any).phone, address: (settings as any).address, logo_url: (settings as any).logo_url, tax_number: (settings as any).tax_number } : undefined,
+      customer: selectedCustomer ? { name: (selectedCustomer as any).name } : null,
+      items: cart.map((c) => ({ name: c.name, quantity: c.quantity, unit_price: c.unit_price })),
+      subtotal, discount, tax, tax_rate: taxRate, total, paid, due, currency, payment,
+    });
     setCart([]); setDiscount(0); setSearch(""); setPaidAmount("");
     barcodeRef.current?.focus();
   };
 
   const printInvoice = async () => {
-    if (!lastSaleId) return;
-    window.print();
+    if (!lastInvoice) return;
+    setTimeout(() => window.print(), 50);
   };
 
   return (
@@ -319,6 +329,7 @@ function POSPage() {
         </div>
       </Card>
       <BarcodeScanner open={scannerOpen} onOpenChange={setScannerOpen} onResult={handleScanned} />
+      {lastInvoice && <InvoicePrint data={lastInvoice} />}
     </div>
   );
 }
