@@ -33,6 +33,7 @@ import { Route as AuthenticatedAutomationsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedApprovalsRouteImport } from './routes/_authenticated/approvals'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAiAdvisorRouteImport } from './routes/_authenticated/ai-advisor'
+import { Route as AuthenticatedAbsentOwnerRouteImport } from './routes/_authenticated/absent-owner'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -156,10 +157,17 @@ const AuthenticatedAiAdvisorRoute = AuthenticatedAiAdvisorRouteImport.update({
   path: '/ai-advisor',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAbsentOwnerRoute =
+  AuthenticatedAbsentOwnerRouteImport.update({
+    id: '/absent-owner',
+    path: '/absent-owner',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/absent-owner': typeof AuthenticatedAbsentOwnerRoute
   '/ai-advisor': typeof AuthenticatedAiAdvisorRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
@@ -185,6 +193,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/absent-owner': typeof AuthenticatedAbsentOwnerRoute
   '/ai-advisor': typeof AuthenticatedAiAdvisorRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
@@ -212,6 +221,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/absent-owner': typeof AuthenticatedAbsentOwnerRoute
   '/_authenticated/ai-advisor': typeof AuthenticatedAiAdvisorRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/approvals': typeof AuthenticatedApprovalsRoute
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/absent-owner'
     | '/ai-advisor'
     | '/analytics'
     | '/approvals'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/absent-owner'
     | '/ai-advisor'
     | '/analytics'
     | '/approvals'
@@ -290,6 +302,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/absent-owner'
     | '/_authenticated/ai-advisor'
     | '/_authenticated/analytics'
     | '/_authenticated/approvals'
@@ -490,10 +503,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAiAdvisorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/absent-owner': {
+      id: '/_authenticated/absent-owner'
+      path: '/absent-owner'
+      fullPath: '/absent-owner'
+      preLoaderRoute: typeof AuthenticatedAbsentOwnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAbsentOwnerRoute: typeof AuthenticatedAbsentOwnerRoute
   AuthenticatedAiAdvisorRoute: typeof AuthenticatedAiAdvisorRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedApprovalsRoute: typeof AuthenticatedApprovalsRoute
@@ -517,6 +538,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAbsentOwnerRoute: AuthenticatedAbsentOwnerRoute,
   AuthenticatedAiAdvisorRoute: AuthenticatedAiAdvisorRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedApprovalsRoute: AuthenticatedApprovalsRoute,

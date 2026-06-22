@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_restrictions: {
+        Row: {
+          disabled: boolean
+          reason: string | null
+          restricted_at: string
+          restricted_by: string | null
+          user_id: string
+        }
+        Insert: {
+          disabled?: boolean
+          reason?: string | null
+          restricted_at?: string
+          restricted_by?: string | null
+          user_id: string
+        }
+        Update: {
+          disabled?: boolean
+          reason?: string | null
+          restricted_at?: string
+          restricted_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      activity_events: {
+        Row: {
+          amount: number | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          flagged: boolean
+          id: string
+          metadata: Json
+          reason: string | null
+          risk_level: string
+          risk_score: number
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          flagged?: boolean
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          risk_level?: string
+          risk_score?: number
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          flagged?: boolean
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          risk_level?: string
+          risk_score?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       ai_recommendations: {
         Row: {
           body: string
@@ -44,6 +113,66 @@ export type Database = {
           priority?: string
           status?: string
           title?: string
+        }
+        Relationships: []
+      }
+      alert_clusters: {
+        Row: {
+          ai_explanation: string | null
+          confidence: number
+          context_tag: string | null
+          created_at: string
+          event_ids: string[]
+          id: string
+          recommended_action: string | null
+          risk_score: number
+          severity: string
+          signals: Json
+          status: string
+          summary: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+          window_end: string
+          window_start: string
+        }
+        Insert: {
+          ai_explanation?: string | null
+          confidence?: number
+          context_tag?: string | null
+          created_at?: string
+          event_ids?: string[]
+          id?: string
+          recommended_action?: string | null
+          risk_score?: number
+          severity?: string
+          signals?: Json
+          status?: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+          window_end?: string
+          window_start?: string
+        }
+        Update: {
+          ai_explanation?: string | null
+          confidence?: number
+          context_tag?: string | null
+          created_at?: string
+          event_ids?: string[]
+          id?: string
+          recommended_action?: string | null
+          risk_score?: number
+          severity?: string
+          signals?: Json
+          status?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+          window_end?: string
+          window_start?: string
         }
         Relationships: []
       }
@@ -486,6 +615,57 @@ export type Database = {
         }
         Relationships: []
       }
+      detection_rules: {
+        Row: {
+          applies_to_role: string
+          base_risk: number
+          code: string
+          created_at: string
+          event_type: string
+          id: string
+          is_active: boolean
+          max_count: number | null
+          name: string
+          notes: string | null
+          severity: string
+          threshold: number | null
+          updated_at: string
+          window_minutes: number | null
+        }
+        Insert: {
+          applies_to_role?: string
+          base_risk?: number
+          code: string
+          created_at?: string
+          event_type: string
+          id?: string
+          is_active?: boolean
+          max_count?: number | null
+          name: string
+          notes?: string | null
+          severity?: string
+          threshold?: number | null
+          updated_at?: string
+          window_minutes?: number | null
+        }
+        Update: {
+          applies_to_role?: string
+          base_risk?: number
+          code?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          is_active?: boolean
+          max_count?: number | null
+          name?: string
+          notes?: string | null
+          severity?: string
+          threshold?: number | null
+          updated_at?: string
+          window_minutes?: number | null
+        }
+        Relationships: []
+      }
       documents: {
         Row: {
           category: string
@@ -522,6 +702,45 @@ export type Database = {
           size_bytes?: number | null
           storage_path?: string
           uploaded_by?: string
+        }
+        Relationships: []
+      }
+      employee_baselines: {
+        Row: {
+          active_hour_end: number
+          active_hour_start: number
+          adjustments_per_day: number
+          avg_discount_pct: number
+          last_computed_at: string
+          refunds_per_hour: number
+          sales_per_hour: number
+          sample_size: number
+          stddev_discount_pct: number
+          user_id: string
+        }
+        Insert: {
+          active_hour_end?: number
+          active_hour_start?: number
+          adjustments_per_day?: number
+          avg_discount_pct?: number
+          last_computed_at?: string
+          refunds_per_hour?: number
+          sales_per_hour?: number
+          sample_size?: number
+          stddev_discount_pct?: number
+          user_id: string
+        }
+        Update: {
+          active_hour_end?: number
+          active_hour_start?: number
+          adjustments_per_day?: number
+          avg_discount_pct?: number
+          last_computed_at?: string
+          refunds_per_hour?: number
+          sales_per_hour?: number
+          sample_size?: number
+          stddev_discount_pct?: number
+          user_id?: string
         }
         Relationships: []
       }
@@ -579,6 +798,45 @@ export type Database = {
           created_at?: string
           id?: string
           score?: number
+        }
+        Relationships: []
+      }
+      owner_mode: {
+        Row: {
+          enabled: boolean
+          enabled_at: string | null
+          freeze_discounts: boolean
+          freeze_inventory: boolean
+          freeze_returns: boolean
+          id: boolean
+          notes: string | null
+          require_approval_discount_pct: number
+          require_approval_refund_amount: number
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          enabled_at?: string | null
+          freeze_discounts?: boolean
+          freeze_inventory?: boolean
+          freeze_returns?: boolean
+          id?: boolean
+          notes?: string | null
+          require_approval_discount_pct?: number
+          require_approval_refund_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          enabled_at?: string | null
+          freeze_discounts?: boolean
+          freeze_inventory?: boolean
+          freeze_returns?: boolean
+          id?: boolean
+          notes?: string | null
+          require_approval_discount_pct?: number
+          require_approval_refund_amount?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -751,6 +1009,36 @@ export type Database = {
           },
         ]
       }
+      role_sensitivity: {
+        Row: {
+          allow_offhours_adjust: boolean
+          allow_price_change: boolean
+          max_discount_pct: number
+          max_refund_per_hour: number
+          role: string
+          sensitivity: number
+          updated_at: string
+        }
+        Insert: {
+          allow_offhours_adjust?: boolean
+          allow_price_change?: boolean
+          max_discount_pct?: number
+          max_refund_per_hour?: number
+          role: string
+          sensitivity?: number
+          updated_at?: string
+        }
+        Update: {
+          allow_offhours_adjust?: boolean
+          allow_price_change?: boolean
+          max_discount_pct?: number
+          max_refund_per_hour?: number
+          role?: string
+          sensitivity?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       sale_items: {
         Row: {
           created_at: string
@@ -857,6 +1145,59 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_alerts: {
+        Row: {
+          acknowledged: boolean
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          created_at: string
+          id: string
+          kind: string
+          message: string
+          metadata: Json
+          related_event_id: string | null
+          severity: string
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          message: string
+          metadata?: Json
+          related_event_id?: string | null
+          severity?: string
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged?: boolean
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          message?: string
+          metadata?: Json
+          related_event_id?: string | null
+          severity?: string
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_alerts_related_event_id_fkey"
+            columns: ["related_event_id"]
+            isOneToOne: false
+            referencedRelation: "activity_events"
             referencedColumns: ["id"]
           },
         ]
@@ -1179,6 +1520,7 @@ export type Database = {
     }
     Functions: {
       calculate_business_health: { Args: never; Returns: Json }
+      correlate_alerts: { Args: { _window_minutes?: number }; Returns: number }
       create_purchase: {
         Args: { _items: Json; _notes: string; _supplier_id: string }
         Returns: string
@@ -1207,6 +1549,21 @@ export type Database = {
             }
             Returns: string
           }
+      employee_trust_scores: {
+        Args: never
+        Returns: {
+          avg_risk: number
+          events: number
+          flagged: number
+          full_name: string
+          trust_score: number
+          user_id: string
+        }[]
+      }
+      evaluate_event_intelligence: {
+        Args: { _event_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1214,7 +1571,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      intelligence_summary: { Args: never; Returns: Json }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_activity: {
+        Args: {
+          _amount: number
+          _entity_id: string
+          _entity_type: string
+          _metadata?: Json
+          _type: string
+        }
+        Returns: string
+      }
       record_customer_payment: {
         Args: {
           _amount: number
@@ -1226,6 +1594,9 @@ export type Database = {
         Returns: string
       }
       record_health_snapshot: { Args: never; Returns: string }
+      refresh_all_baselines: { Args: never; Returns: number }
+      refresh_employee_baseline: { Args: { _uid: string }; Returns: undefined }
+      store_risk_score: { Args: never; Returns: Json }
     }
     Enums: {
       adjustment_type:
