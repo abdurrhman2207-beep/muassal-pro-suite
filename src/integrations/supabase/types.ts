@@ -1573,6 +1573,7 @@ export type Database = {
       }
       intelligence_summary: { Args: never; Returns: Json }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
       log_activity: {
         Args: {
           _amount: number
